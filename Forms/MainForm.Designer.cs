@@ -230,6 +230,7 @@
             btnStart.TabIndex = 0;
             btnStart.Text = "Start downloads";
             btnStart.UseVisualStyleBackColor = true;
+            btnStart.Click += this.btnStart_Click;
             // 
             // pnlSettings
             // 
@@ -267,7 +268,7 @@
             chkForceDownload.TabIndex = 7;
             chkForceDownload.Text = "Download alle igen";
             chkForceDownload.UseVisualStyleBackColor = true;
-            chkForceDownload.CheckedChanged += radioButton2_CheckedChanged;
+            chkForceDownload.CheckedChanged += chkForceDownload_CheckedChanged;
             // 
             // chkSkipExisting
             // 
@@ -280,6 +281,7 @@
             chkSkipExisting.TabStop = true;
             chkSkipExisting.Text = "Spring tidligere downloads over";
             chkSkipExisting.UseVisualStyleBackColor = true;
+            chkSkipExisting.CheckedChanged += chkSkipExisting_CheckedChanged;
             // 
             // btnBrowseFolder
             // 
