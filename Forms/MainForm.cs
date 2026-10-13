@@ -1,5 +1,8 @@
-using PDFDownloader.Services;
 using PDFDownloader.Models;
+using PDFDownloader.Services;
+using System.Net.Http;
+using System.Runtime.Intrinsics.X86;
+using System.Security.Policy;
 
 namespace PDFDownloader
 {
@@ -9,6 +12,7 @@ namespace PDFDownloader
         {
             InitializeComponent();
         }
+
         private void btnBrowseExcel_Click(object sender, EventArgs e)
         {
             using OpenFileDialog dialog = new()
@@ -52,19 +56,31 @@ namespace PDFDownloader
             }
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private async void btnStart_Click(object sender, EventArgs e)
         {
-            var ExcelService = new ExcelService();
-            var ExcelLines = new List<DownloadItem>();
-            ExcelLines = ExcelService.ReadExcel(txtExcelPath.Text);
+            var downloadService = new DownloadService();
+            var excelService = new ExcelService();
+            //var ExcelLines = new List<DownloadItem>();
+            var excelLines = excelService.ReadExcel(txtExcelPath.Text);
             dgvResults.Rows.Clear();
+            int maxDownloads = 10;
+            //int i = 1;
 
-
-            foreach (var row in ExcelLines)
+            foreach (var row in excelLines.Take(maxDownloads))
             {
-                dgvResults.Rows.Add(row.Id, row.Url, row.AltUrl);
+                //dgvResults.Rows.Add(row.Id, row.Url, row.AltUrl);
+
+               bool success =  await downloadService.TryDownloadItemAsync(row, txtOutputFolder.Text);
+                dgvResults.Rows.Add(row.Id, success, row.Url, row.AltUrl);
+
+                //if (i <= maxDownloads){
+                //    i++;
+                //}
+                //else
+                //{
+                //    break;
+                //}
             }
         }
     }
-
 }

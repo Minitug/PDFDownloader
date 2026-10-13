@@ -57,6 +57,7 @@
             txtOutputFolder = new TextBox();
             txtExcelPath = new TextBox();
             tlpMain = new TableLayoutPanel();
+            lblDebug = new Label();
             pnlResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvResults).BeginInit();
             pnlProgress.SuspendLayout();
@@ -230,10 +231,11 @@
             btnStart.TabIndex = 0;
             btnStart.Text = "Start downloads";
             btnStart.UseVisualStyleBackColor = true;
-            btnStart.Click += this.btnStart_Click;
+            btnStart.Click += btnStart_Click;
             // 
             // pnlSettings
             // 
+            pnlSettings.Controls.Add(lblDebug);
             pnlSettings.Controls.Add(lblDescription);
             pnlSettings.Controls.Add(chkForceDownload);
             pnlSettings.Controls.Add(chkSkipExisting);
@@ -360,6 +362,14 @@
             tlpMain.Size = new Size(1446, 635);
             tlpMain.TabIndex = 9;
             // 
+            // lblDebug
+            // 
+            lblDebug.AutoSize = true;
+            lblDebug.Location = new Point(766, 21);
+            lblDebug.Name = "lblDebug";
+            lblDebug.Size = new Size(0, 15);
+            lblDebug.TabIndex = 9;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -412,5 +422,6 @@
         private DataGridViewTextBoxColumn Source;
         private DataGridViewTextBoxColumn Message;
         private TableLayoutPanel tlpMain;
+        private Label lblDebug;
     }
 }
