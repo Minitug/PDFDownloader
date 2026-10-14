@@ -76,28 +76,21 @@ namespace PDFDownloader
             int skipped = 0; 
             int failed = 0;
 
-
             foreach (var row in excelLines.Take(maxDownloads))
             {
-                //dgvResults.Rows.Add(row.Id, row.Url, row.AltUrl);
-
-
                 DownloadResult result = await downloadService.TryDownloadItemAsync(
                     row,
                     txtOutputFolder.Text
                 );
-                //string successPrint;
                 if (result.Status == "Downloadet")
                 {
                     succeeded++;
                     lblDownloadedFiles.Text = succeeded.ToString();
-                    //successPrint = "Downloadet";
                 }
                 else
                 {
                     skipped++;
                     lblFailedFiles.Text = skipped.ToString();
-                    //successPrint = "Fejlet";
                 }
 
                 dgvResults.Rows.Add(

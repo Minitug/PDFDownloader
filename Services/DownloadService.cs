@@ -20,8 +20,6 @@ namespace PDFDownloader.Services
 
             using Stream source = await response.Content.ReadAsStreamAsync();
 
-            //string /*path*/ = Path.Combine(destinationPath, "test.pdf");
-
             using FileStream destination = File.Create(destinationPath);
 
             await source.CopyToAsync(destination);
@@ -57,8 +55,6 @@ namespace PDFDownloader.Services
                     await DownloadPdfAsync(requestUrl, path);
 
                     bool isPdf = pdfValidator.IsPdf(path);
-
-                    
 
                     if (isPdf)
                     {
