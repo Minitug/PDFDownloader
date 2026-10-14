@@ -11,6 +11,9 @@ namespace PDFDownloader
         public MainForm()
         {
             InitializeComponent();
+
+            txtExcelPath.Text = Properties.Settings.Default.LastExcelPath;
+            txtOutputFolder.Text = Properties.Settings.Default.LastOutputFolder;
         }
 
         private void btnBrowseExcel_Click(object sender, EventArgs e)
@@ -24,6 +27,8 @@ namespace PDFDownloader
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 txtExcelPath.Text = dialog.FileName;
+                Properties.Settings.Default.LastExcelPath = dialog.FileName;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -37,6 +42,8 @@ namespace PDFDownloader
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 txtOutputFolder.Text = dialog.SelectedPath;
+                Properties.Settings.Default.LastOutputFolder = dialog.SelectedPath;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -65,21 +72,41 @@ namespace PDFDownloader
             dgvResults.Rows.Clear();
             int maxDownloads = 10;
             //int i = 1;
+            int succeeded = 0;
+            int skipped = 0; 
+            int failed = 0;
+
 
             foreach (var row in excelLines.Take(maxDownloads))
             {
                 //dgvResults.Rows.Add(row.Id, row.Url, row.AltUrl);
 
-               bool success =  await downloadService.TryDownloadItemAsync(row, txtOutputFolder.Text);
-                dgvResults.Rows.Add(row.Id, success, row.Url, row.AltUrl);
 
-                //if (i <= maxDownloads){
-                //    i++;
-                //}
-                //else
-                //{
-                //    break;
-                //}
+                DownloadResult result = await downloadService.TryDownloadItemAsync(
+                    row,
+                    txtOutputFolder.Text
+                );
+                //string successPrint;
+                if (result.Status == "Downloadet")
+                {
+                    succeeded++;
+                    lblDownloadedFiles.Text = succeeded.ToString();
+                    //successPrint = "Downloadet";
+                }
+                else
+                {
+                    skipped++;
+                    lblFailedFiles.Text = skipped.ToString();
+                    //successPrint = "Fejlet";
+                }
+
+                dgvResults.Rows.Add(
+                    result.Id,
+                    result.Status,
+                    result.Url,
+                    result.Message
+                );
+
             }
         }
     }

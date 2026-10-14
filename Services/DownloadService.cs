@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using PDFDownloader.Models;
 
@@ -26,30 +27,80 @@ namespace PDFDownloader.Services
             await source.CopyToAsync(destination);
         }
 
-        internal async Task<bool> TryDownloadItemAsync(DownloadItem item, string txtOutputFolderText)
+        internal async Task<DownloadResult> TryDownloadItemAsync(DownloadItem item, string txtOutputFolderText)
         {
             
             string[] urls = { item.Url, item.AltUrl };
-            string path = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf");
+            string path = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf.tmp");
+            string finalpath = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf");
+            string message = "Ingen gyldig PDF fundet";
+            var pdfValidator = new PdfValidator();
+
+            if (string.IsNullOrWhiteSpace(item.Url) &&
+                string.IsNullOrWhiteSpace(item.AltUrl))
+            {
+                return new DownloadResult
+                {
+                    Id = item.Id,
+                    Status = "Fejlet",
+                    Url = "",
+                    Message = "Ingen URL angivet"
+                };
+            }
 
             foreach (var requestUrl in urls) {
 
-                if (string.IsNullOrEmpty(requestUrl)) continue;
+                if (string.IsNullOrWhiteSpace(requestUrl)) continue;
 
                 try
                 {
                     await DownloadPdfAsync(requestUrl, path);
 
-                    return true;
+                    bool isPdf = pdfValidator.IsPdf(path);
+
+                    
+
+                    if (isPdf)
+                    {
+                        File.Move(path, finalpath, overwrite: true);
+
+                        message = requestUrl == item.Url
+                        ? "Downloadet fra primær URL"
+                        : "Downloadet fra alternativ URL";
+
+                        return new DownloadResult
+                        {
+                            Id = item.Id,
+                            Status = "Downloadet",
+                            Url = requestUrl,
+                            Message = message
+                        };
+                    }
+                    else 
+                    {
+                        message = "Fandt fil, men kunne ikke validere PDF format";       
+                    }
+
+                    
                 }
 
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                    //return false;
+                    message = $"Kunne ikke downloade fil: {ex.Message}";
+                }
+
+                finally
+                {
+                    File.Delete(path);
                 }
             }
-            return false;
+            return new DownloadResult
+            {
+                Id = item.Id,
+                Status = "Fejlet",
+                Url = "",
+                Message = message
+            };
         }
     }
 }
