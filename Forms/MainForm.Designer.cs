@@ -30,6 +30,10 @@
         {
             pnlResults = new Panel();
             dgvResults = new DataGridView();
+            ID = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
+            Source = new DataGridViewTextBoxColumn();
+            Message = new DataGridViewTextBoxColumn();
             pnlProgress = new Panel();
             lblFailedDownloads = new Label();
             lblFailedFiles = new Label();
@@ -54,10 +58,6 @@
             txtOutputFolder = new TextBox();
             txtExcelPath = new TextBox();
             tlpMain = new TableLayoutPanel();
-            ID = new DataGridViewTextBoxColumn();
-            Status = new DataGridViewTextBoxColumn();
-            Source = new DataGridViewTextBoxColumn();
-            Message = new DataGridViewTextBoxColumn();
             pnlResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvResults).BeginInit();
             pnlProgress.SuspendLayout();
@@ -91,6 +91,34 @@
             dgvResults.RowHeadersWidth = 62;
             dgvResults.Size = new Size(2058, 362);
             dgvResults.TabIndex = 0;
+            // 
+            // ID
+            // 
+            ID.HeaderText = "ID";
+            ID.MinimumWidth = 8;
+            ID.Name = "ID";
+            ID.ReadOnly = true;
+            // 
+            // Status
+            // 
+            Status.HeaderText = "Status";
+            Status.MinimumWidth = 8;
+            Status.Name = "Status";
+            Status.ReadOnly = true;
+            // 
+            // Source
+            // 
+            Source.HeaderText = "Kilde_URL";
+            Source.MinimumWidth = 8;
+            Source.Name = "Source";
+            Source.ReadOnly = true;
+            // 
+            // Message
+            // 
+            Message.HeaderText = "Besked";
+            Message.MinimumWidth = 8;
+            Message.Name = "Message";
+            Message.ReadOnly = true;
             // 
             // pnlProgress
             // 
@@ -372,34 +400,6 @@
             tlpMain.RowStyles.Add(new RowStyle());
             tlpMain.Size = new Size(2066, 1058);
             tlpMain.TabIndex = 9;
-            // 
-            // ID
-            // 
-            ID.HeaderText = "ID";
-            ID.MinimumWidth = 8;
-            ID.Name = "ID";
-            ID.ReadOnly = true;
-            // 
-            // Status
-            // 
-            Status.HeaderText = "Status";
-            Status.MinimumWidth = 8;
-            Status.Name = "Status";
-            Status.ReadOnly = true;
-            // 
-            // Source
-            // 
-            Source.HeaderText = "Kilde_URL";
-            Source.MinimumWidth = 8;
-            Source.Name = "Source";
-            Source.ReadOnly = true;
-            // 
-            // Message
-            // 
-            Message.HeaderText = "Besked";
-            Message.MinimumWidth = 8;
-            Message.Name = "Message";
-            Message.ReadOnly = true;
             // 
             // MainForm
             // 

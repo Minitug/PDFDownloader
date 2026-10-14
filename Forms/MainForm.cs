@@ -67,11 +67,9 @@ namespace PDFDownloader
         {
             var downloadService = new DownloadService();
             var excelService = new ExcelService();
-            //var ExcelLines = new List<DownloadItem>();
             var excelLines = excelService.ReadExcel(txtExcelPath.Text);
             dgvResults.Rows.Clear();
             int maxDownloads = 10;
-            //int i = 1;
             int succeeded = 0;
             int skipped = 0; 
             int failed = 0;
@@ -89,8 +87,8 @@ namespace PDFDownloader
                 }
                 else
                 {
-                    skipped++;
-                    lblFailedFiles.Text = skipped.ToString();
+                    failed++;
+                    lblFailedFiles.Text = failed.ToString();
                 }
 
                 dgvResults.Rows.Add(
