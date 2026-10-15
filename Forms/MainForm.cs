@@ -71,11 +71,43 @@ namespace PDFDownloader
             dgvResults.Rows.Clear();
             int maxDownloads = 10;
             int succeeded = 0;
-            int skipped = 0; 
+            int skipped = 0;
             int failed = 0;
+
+            var duplicateIds = excelLines
+                .GroupBy(item => item.Id)
+                .Where(group => group.Count() > 1)
+                .Select(group => group.Key)
+                .ToHashSet();
+
+            List<DownloadResult> results = new();
+
 
             foreach (var row in excelLines.Take(maxDownloads))
             {
+                if (duplicateIds.Contains(row.Id))
+                {
+                    DownloadResult duplicateIdFailure = new DownloadResult {
+                        Id = row.Id,
+                        Status = "Fejlet",
+                        Url = "",
+                        Message = "Dubleret BR-nummer i Excelfilen"
+                    };
+
+                    results.Add(duplicateIdFailure);
+
+                    dgvResults.Rows.Add(
+                        duplicateIdFailure.Id,
+                        duplicateIdFailure.Status,
+                        duplicateIdFailure.Url,
+                        duplicateIdFailure.Message);
+
+                    failed++;
+                    lblFailedFiles.Text = failed.ToString();
+
+                    continue;
+                }
+
                 DownloadResult result = await downloadService.TryDownloadItemAsync(
                     row,
                     txtOutputFolder.Text
@@ -90,6 +122,8 @@ namespace PDFDownloader
                     failed++;
                     lblFailedFiles.Text = failed.ToString();
                 }
+
+                results.Add(result);
 
                 dgvResults.Rows.Add(
                     result.Id,

@@ -70,10 +70,9 @@
             // 
             pnlResults.Controls.Add(dgvResults);
             pnlResults.Dock = DockStyle.Fill;
-            pnlResults.Location = new Point(4, 692);
-            pnlResults.Margin = new Padding(4, 5, 4, 5);
+            pnlResults.Location = new Point(3, 415);
             pnlResults.Name = "pnlResults";
-            pnlResults.Size = new Size(2058, 362);
+            pnlResults.Size = new Size(1440, 217);
             pnlResults.TabIndex = 3;
             // 
             // dgvResults
@@ -85,11 +84,10 @@
             dgvResults.Columns.AddRange(new DataGridViewColumn[] { ID, Status, Source, Message });
             dgvResults.Dock = DockStyle.Fill;
             dgvResults.Location = new Point(0, 0);
-            dgvResults.Margin = new Padding(4, 5, 4, 5);
             dgvResults.Name = "dgvResults";
             dgvResults.ReadOnly = true;
             dgvResults.RowHeadersWidth = 62;
-            dgvResults.Size = new Size(2058, 362);
+            dgvResults.Size = new Size(1440, 217);
             dgvResults.TabIndex = 0;
             // 
             // ID
@@ -131,19 +129,17 @@
             pnlProgress.Controls.Add(lblProgress);
             pnlProgress.Controls.Add(progressDownloads);
             pnlProgress.Dock = DockStyle.Fill;
-            pnlProgress.Location = new Point(4, 432);
-            pnlProgress.Margin = new Padding(4, 5, 4, 5);
+            pnlProgress.Location = new Point(3, 259);
             pnlProgress.Name = "pnlProgress";
-            pnlProgress.Size = new Size(2058, 250);
+            pnlProgress.Size = new Size(1440, 150);
             pnlProgress.TabIndex = 2;
             // 
             // lblFailedDownloads
             // 
             lblFailedDownloads.AutoSize = true;
-            lblFailedDownloads.Location = new Point(1814, 197);
-            lblFailedDownloads.Margin = new Padding(4, 0, 4, 0);
+            lblFailedDownloads.Location = new Point(1270, 118);
             lblFailedDownloads.Name = "lblFailedDownloads";
-            lblFailedDownloads.Size = new Size(53, 25);
+            lblFailedDownloads.Size = new Size(35, 15);
             lblFailedDownloads.TabIndex = 7;
             lblFailedDownloads.Text = "Fejlet";
             // 
@@ -151,20 +147,18 @@
             // 
             lblFailedFiles.AutoSize = true;
             lblFailedFiles.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblFailedFiles.Location = new Point(1824, 153);
-            lblFailedFiles.Margin = new Padding(4, 0, 4, 0);
+            lblFailedFiles.Location = new Point(1277, 92);
             lblFailedFiles.Name = "lblFailedFiles";
-            lblFailedFiles.Size = new Size(27, 32);
+            lblFailedFiles.Size = new Size(19, 21);
             lblFailedFiles.TabIndex = 6;
             lblFailedFiles.Text = "0";
             // 
             // lblSkippedDownloads
             // 
             lblSkippedDownloads.AutoSize = true;
-            lblSkippedDownloads.Location = new Point(904, 197);
-            lblSkippedDownloads.Margin = new Padding(4, 0, 4, 0);
+            lblSkippedDownloads.Location = new Point(633, 118);
             lblSkippedDownloads.Name = "lblSkippedDownloads";
-            lblSkippedDownloads.Size = new Size(125, 25);
+            lblSkippedDownloads.Size = new Size(81, 15);
             lblSkippedDownloads.TabIndex = 5;
             lblSkippedDownloads.Text = "Sprunget over";
             // 
@@ -172,20 +166,18 @@
             // 
             lblSkippedFiles.AutoSize = true;
             lblSkippedFiles.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblSkippedFiles.Location = new Point(947, 153);
-            lblSkippedFiles.Margin = new Padding(4, 0, 4, 0);
+            lblSkippedFiles.Location = new Point(663, 92);
             lblSkippedFiles.Name = "lblSkippedFiles";
-            lblSkippedFiles.Size = new Size(27, 32);
+            lblSkippedFiles.Size = new Size(19, 21);
             lblSkippedFiles.TabIndex = 4;
             lblSkippedFiles.Text = "0";
             // 
             // lblDownloaded
             // 
             lblDownloaded.AutoSize = true;
-            lblDownloaded.Location = new Point(93, 197);
-            lblDownloaded.Margin = new Padding(4, 0, 4, 0);
+            lblDownloaded.Location = new Point(65, 118);
             lblDownloaded.Name = "lblDownloaded";
-            lblDownloaded.Size = new Size(109, 25);
+            lblDownloaded.Size = new Size(71, 15);
             lblDownloaded.TabIndex = 3;
             lblDownloaded.Text = "Downloadet";
             // 
@@ -193,11 +185,10 @@
             // 
             lblDownloadedFiles.AutoSize = true;
             lblDownloadedFiles.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblDownloadedFiles.Location = new Point(130, 153);
-            lblDownloadedFiles.Margin = new Padding(4, 0, 4, 0);
+            lblDownloadedFiles.Location = new Point(91, 92);
             lblDownloadedFiles.Name = "lblDownloadedFiles";
             lblDownloadedFiles.RightToLeft = RightToLeft.Yes;
-            lblDownloadedFiles.Size = new Size(27, 32);
+            lblDownloadedFiles.Size = new Size(19, 21);
             lblDownloadedFiles.TabIndex = 2;
             lblDownloadedFiles.Text = "0";
             // 
@@ -205,19 +196,17 @@
             // 
             lblProgress.AutoSize = true;
             lblProgress.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblProgress.Location = new Point(26, 28);
-            lblProgress.Margin = new Padding(4, 0, 4, 0);
+            lblProgress.Location = new Point(18, 17);
             lblProgress.Name = "lblProgress";
-            lblProgress.Size = new Size(134, 40);
+            lblProgress.Size = new Size(89, 25);
             lblProgress.TabIndex = 1;
             lblProgress.Text = "Fremdrift";
             // 
             // progressDownloads
             // 
-            progressDownloads.Location = new Point(26, 75);
-            progressDownloads.Margin = new Padding(4, 5, 4, 5);
+            progressDownloads.Location = new Point(18, 45);
             progressDownloads.Name = "progressDownloads";
-            progressDownloads.Size = new Size(2031, 38);
+            progressDownloads.Size = new Size(1422, 23);
             progressDownloads.TabIndex = 0;
             // 
             // pnlControls
@@ -225,28 +214,25 @@
             pnlControls.Controls.Add(btnCancel);
             pnlControls.Controls.Add(btnStart);
             pnlControls.Dock = DockStyle.Fill;
-            pnlControls.Location = new Point(4, 312);
-            pnlControls.Margin = new Padding(4, 5, 4, 5);
+            pnlControls.Location = new Point(3, 187);
             pnlControls.Name = "pnlControls";
-            pnlControls.Size = new Size(2058, 110);
+            pnlControls.Size = new Size(1440, 66);
             pnlControls.TabIndex = 1;
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(1937, 30);
-            btnCancel.Margin = new Padding(4, 5, 4, 5);
+            btnCancel.Location = new Point(1356, 18);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(120, 65);
+            btnCancel.Size = new Size(84, 39);
             btnCancel.TabIndex = 9;
             btnCancel.Text = "Stop";
             btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnStart
             // 
-            btnStart.Location = new Point(26, 30);
-            btnStart.Margin = new Padding(4, 5, 4, 5);
+            btnStart.Location = new Point(18, 18);
             btnStart.Name = "btnStart";
-            btnStart.Size = new Size(1903, 65);
+            btnStart.Size = new Size(1332, 39);
             btnStart.TabIndex = 0;
             btnStart.Text = "Start downloads";
             btnStart.UseVisualStyleBackColor = true;
@@ -265,39 +251,35 @@
             pnlSettings.Controls.Add(txtOutputFolder);
             pnlSettings.Controls.Add(txtExcelPath);
             pnlSettings.Dock = DockStyle.Fill;
-            pnlSettings.Location = new Point(4, 5);
-            pnlSettings.Margin = new Padding(4, 5, 4, 5);
+            pnlSettings.Location = new Point(3, 3);
             pnlSettings.Name = "pnlSettings";
-            pnlSettings.Size = new Size(2058, 297);
+            pnlSettings.Size = new Size(1440, 178);
             pnlSettings.TabIndex = 0;
             // 
             // lblDebug
             // 
             lblDebug.AutoSize = true;
-            lblDebug.Location = new Point(1094, 35);
-            lblDebug.Margin = new Padding(4, 0, 4, 0);
+            lblDebug.Location = new Point(766, 21);
             lblDebug.Name = "lblDebug";
-            lblDebug.Size = new Size(0, 25);
+            lblDebug.Size = new Size(0, 15);
             lblDebug.TabIndex = 9;
             // 
             // lblDescription
             // 
             lblDescription.AutoSize = true;
             lblDescription.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblDescription.Location = new Point(26, 15);
-            lblDescription.Margin = new Padding(4, 0, 4, 0);
+            lblDescription.Location = new Point(18, 9);
             lblDescription.Name = "lblDescription";
-            lblDescription.Size = new Size(444, 40);
+            lblDescription.Size = new Size(297, 25);
             lblDescription.TabIndex = 8;
             lblDescription.Text = "Download PDF filer fra en Excel fil";
             // 
             // chkForceDownload
             // 
             chkForceDownload.AutoSize = true;
-            chkForceDownload.Location = new Point(309, 265);
-            chkForceDownload.Margin = new Padding(4, 5, 4, 5);
+            chkForceDownload.Location = new Point(216, 159);
             chkForceDownload.Name = "chkForceDownload";
-            chkForceDownload.Size = new Size(189, 29);
+            chkForceDownload.Size = new Size(126, 19);
             chkForceDownload.TabIndex = 7;
             chkForceDownload.Text = "Download alle igen";
             chkForceDownload.UseVisualStyleBackColor = true;
@@ -307,10 +289,9 @@
             // 
             chkSkipExisting.AutoSize = true;
             chkSkipExisting.Checked = true;
-            chkSkipExisting.Location = new Point(26, 265);
-            chkSkipExisting.Margin = new Padding(4, 5, 4, 5);
+            chkSkipExisting.Location = new Point(18, 159);
             chkSkipExisting.Name = "chkSkipExisting";
-            chkSkipExisting.Size = new Size(291, 29);
+            chkSkipExisting.Size = new Size(192, 19);
             chkSkipExisting.TabIndex = 6;
             chkSkipExisting.TabStop = true;
             chkSkipExisting.Text = "Spring tidligere downloads over";
@@ -319,10 +300,9 @@
             // 
             // btnBrowseFolder
             // 
-            btnBrowseFolder.Location = new Point(1937, 215);
-            btnBrowseFolder.Margin = new Padding(4, 5, 4, 5);
+            btnBrowseFolder.Location = new Point(1356, 129);
             btnBrowseFolder.Name = "btnBrowseFolder";
-            btnBrowseFolder.Size = new Size(120, 38);
+            btnBrowseFolder.Size = new Size(84, 23);
             btnBrowseFolder.TabIndex = 5;
             btnBrowseFolder.Text = "Find mappe";
             btnBrowseFolder.UseVisualStyleBackColor = true;
@@ -330,10 +310,9 @@
             // 
             // btnBrowseExcel
             // 
-            btnBrowseExcel.Location = new Point(1937, 125);
-            btnBrowseExcel.Margin = new Padding(4, 5, 4, 5);
+            btnBrowseExcel.Location = new Point(1356, 75);
             btnBrowseExcel.Name = "btnBrowseExcel";
-            btnBrowseExcel.Size = new Size(120, 38);
+            btnBrowseExcel.Size = new Size(84, 23);
             btnBrowseExcel.TabIndex = 4;
             btnBrowseExcel.Text = "Gennemse";
             btnBrowseExcel.UseVisualStyleBackColor = true;
@@ -343,10 +322,9 @@
             // 
             lblFileSelection.AutoSize = true;
             lblFileSelection.ForeColor = SystemColors.ControlText;
-            lblFileSelection.Location = new Point(26, 97);
-            lblFileSelection.Margin = new Padding(4, 0, 4, 0);
+            lblFileSelection.Location = new Point(18, 58);
             lblFileSelection.Name = "lblFileSelection";
-            lblFileSelection.Size = new Size(390, 25);
+            lblFileSelection.Size = new Size(261, 15);
             lblFileSelection.TabIndex = 3;
             lblFileSelection.Text = "Specificer venligst Excelfilen med downloadlinks";
             // 
@@ -354,29 +332,26 @@
             // 
             lblOutputSelection.AutoSize = true;
             lblOutputSelection.ForeColor = SystemColors.ControlText;
-            lblOutputSelection.Location = new Point(26, 187);
-            lblOutputSelection.Margin = new Padding(4, 0, 4, 0);
+            lblOutputSelection.Location = new Point(18, 112);
             lblOutputSelection.Name = "lblOutputSelection";
-            lblOutputSelection.Size = new Size(350, 25);
+            lblOutputSelection.Size = new Size(233, 15);
             lblOutputSelection.TabIndex = 2;
             lblOutputSelection.Text = "Specificer venligst download destinationen";
             // 
             // txtOutputFolder
             // 
-            txtOutputFolder.Location = new Point(26, 217);
-            txtOutputFolder.Margin = new Padding(4, 5, 4, 5);
+            txtOutputFolder.Location = new Point(18, 130);
             txtOutputFolder.Name = "txtOutputFolder";
             txtOutputFolder.ReadOnly = true;
-            txtOutputFolder.Size = new Size(1901, 31);
+            txtOutputFolder.Size = new Size(1332, 23);
             txtOutputFolder.TabIndex = 1;
             // 
             // txtExcelPath
             // 
-            txtExcelPath.Location = new Point(26, 127);
-            txtExcelPath.Margin = new Padding(4, 5, 4, 5);
+            txtExcelPath.Location = new Point(18, 76);
             txtExcelPath.Name = "txtExcelPath";
             txtExcelPath.ReadOnly = true;
-            txtExcelPath.Size = new Size(1901, 31);
+            txtExcelPath.Size = new Size(1332, 23);
             txtExcelPath.TabIndex = 0;
             // 
             // tlpMain
@@ -389,27 +364,25 @@
             tlpMain.Controls.Add(pnlSettings, 0, 0);
             tlpMain.Dock = DockStyle.Fill;
             tlpMain.Location = new Point(0, 0);
-            tlpMain.Margin = new Padding(4, 5, 4, 5);
-            tlpMain.MaximumSize = new Size(2066, 2000);
-            tlpMain.MinimumSize = new Size(2066, 1058);
+            tlpMain.MaximumSize = new Size(1446, 1200);
+            tlpMain.MinimumSize = new Size(1446, 635);
             tlpMain.Name = "tlpMain";
             tlpMain.RowCount = 4;
-            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 307F));
-            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
-            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 260F));
+            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 184F));
+            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 72F));
+            tlpMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 156F));
             tlpMain.RowStyles.Add(new RowStyle());
-            tlpMain.Size = new Size(2066, 1058);
+            tlpMain.Size = new Size(1446, 635);
             tlpMain.TabIndex = 9;
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2068, 1058);
+            ClientSize = new Size(1448, 635);
             Controls.Add(tlpMain);
-            Margin = new Padding(4, 5, 4, 5);
-            MaximumSize = new Size(2090, 1963);
-            MinimumSize = new Size(2090, 1086);
+            MaximumSize = new Size(1468, 1193);
+            MinimumSize = new Size(1347, 634);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "PDF Downloader";
