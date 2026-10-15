@@ -9,6 +9,8 @@ namespace PDFDownloader
         {
             InitializeComponent();
 
+            dgvResults.Columns["ID"].ValueType = typeof(int);
+
             txtExcelPath.Text = Properties.Settings.Default.LastExcelPath;
             txtOutputFolder.Text = Properties.Settings.Default.LastOutputFolder;
         }
@@ -117,11 +119,15 @@ namespace PDFDownloader
                 var reportService = new ReportService();
                 var excelLines = excelService.ReadExcel(txtExcelPath.Text);
                 dgvResults.Rows.Clear();
-                int maxDownloads = 10;
+                int maxDownloads = 20;
                 int succeeded = 0;
                 int skipped = 0;
                 int failed = 0;
                 bool SkipExisting = chkSkipExisting.Checked;
+
+                progressDownloads.Maximum = maxDownloads;
+                progressDownloads.Value = 0;
+                lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
 
                 var duplicateIds = excelLines
                     .GroupBy(item => item.Id)
@@ -137,7 +143,35 @@ namespace PDFDownloader
 
                 foreach (var row in excelLines.Take(maxDownloads))
                 {
-                    if (duplicateIds.Contains(row.Id))
+                    if (!int.TryParse(row.Id, out int numericId) || numericId <= 0)
+                    {
+                        var failedIdResult = new DownloadResult
+                        {
+                            Id = (maxDownloads + 9999).ToString(),
+                            Status = "Fejlet",
+                            Url = "",
+                            Message = $"BR-nummeret '{row.Id}' skal være et positivt heltal"
+                        };
+
+                        results.Add(failedIdResult);
+
+                        dgvResults.Rows.Add(
+                            null,
+                            failedIdResult.Status,
+                            failedIdResult.Url,
+                            failedIdResult.Message
+                        );
+
+                        failed++;
+                        lblFailedFiles.Text = failed.ToString();
+
+                        progressDownloads.Value++;
+                        lblDownloadedMax.Text = $"{progressDownloads.Value} / {progressDownloads.Maximum}";
+
+                        continue;
+                    }
+
+                        if (duplicateIds.Contains(row.Id))
                     {
                         DownloadResult duplicateIdFailure = new DownloadResult
                         {
@@ -150,7 +184,7 @@ namespace PDFDownloader
                         results.Add(duplicateIdFailure);
 
                         dgvResults.Rows.Add(
-                            duplicateIdFailure.Id,
+                            int.Parse(duplicateIdFailure.Id),
                             duplicateIdFailure.Status,
                             duplicateIdFailure.Url,
                             duplicateIdFailure.Message);
@@ -158,6 +192,8 @@ namespace PDFDownloader
                         failed++;
                         lblFailedFiles.Text = failed.ToString();
 
+                        progressDownloads.Value++;
+                        lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
                         continue;
                     }
 
@@ -185,11 +221,15 @@ namespace PDFDownloader
                     results.Add(result);
 
                     dgvResults.Rows.Add(
-                        result.Id,
+                        int.Parse(result.Id),
                         result.Status,
                         result.Url,
                         result.Message
                     );
+
+                progressDownloads.Value++;
+                lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
+
                 }
 
                 reportService.GenerateReport(results, txtOutputFolder.Text);
