@@ -107,6 +107,7 @@ namespace PDFDownloader
             int succeeded = 0;
             int skipped = 0;
             int failed = 0;
+            bool SkipExisting = chkSkipExisting.Checked;
 
             var duplicateIds = excelLines
                 .GroupBy(item => item.Id)
@@ -116,6 +117,9 @@ namespace PDFDownloader
 
             List<DownloadResult> results = new();
 
+            lblDownloadedFiles.Text = succeeded.ToString();
+            lblSkippedFiles.Text = skipped.ToString();
+            lblFailedFiles.Text = failed.ToString();
 
             foreach (var row in excelLines.Take(maxDownloads))
             {
@@ -144,12 +148,18 @@ namespace PDFDownloader
 
                 DownloadResult result = await downloadService.TryDownloadItemAsync(
                     row,
-                    txtOutputFolder.Text
+                    txtOutputFolder.Text,
+                    SkipExisting
                 );
                 if (result.Status == "Downloadet")
                 {
                     succeeded++;
                     lblDownloadedFiles.Text = succeeded.ToString();
+                }
+                else if (result.Status == "Sprunget over")
+                {
+                    skipped++;
+                    lblSkippedFiles.Text = skipped.ToString();
                 }
                 else
                 {
