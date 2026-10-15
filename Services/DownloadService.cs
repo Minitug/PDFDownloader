@@ -7,10 +7,14 @@ namespace PDFDownloader.Services
 
         private readonly HttpClient http = new();
 
-        internal async Task DownloadPdfAsync(string requestUrl, string destinationPath)
+        internal async Task DownloadPdfAsync(
+            string requestUrl, 
+            string destinationPath, 
+            CancellationToken cancellationToken
+        )
         {
 
-            using var response = await http.GetAsync(requestUrl);
+            using var response = await http.GetAsync(requestUrl, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
@@ -18,10 +22,15 @@ namespace PDFDownloader.Services
 
             using FileStream destination = File.Create(destinationPath);
 
-            await source.CopyToAsync(destination);
+            await source.CopyToAsync(destination, cancellationToken);
         }
 
-        internal async Task<DownloadResult> TryDownloadItemAsync(DownloadItem item, string txtOutputFolderText, bool skipExisting)
+        internal async Task<DownloadResult> TryDownloadItemAsync(
+            DownloadItem item, 
+            string txtOutputFolderText, 
+            bool skipExisting, 
+            CancellationToken cancellationToken
+        )
         {
             
             string[] urls = { item.Url, item.AltUrl };
@@ -64,7 +73,7 @@ namespace PDFDownloader.Services
 
                 try
                 {
-                    await DownloadPdfAsync(requestUrl, path);
+                    await DownloadPdfAsync(requestUrl, path, cancellationToken);
 
                     isPdf = pdfValidator.IsPdf(path);
 
@@ -91,7 +100,10 @@ namespace PDFDownloader.Services
 
                     
                 }
-
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     message = $"Kunne ikke downloade fil: {ex.Message}";

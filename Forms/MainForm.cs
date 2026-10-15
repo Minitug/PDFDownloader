@@ -16,6 +16,7 @@ namespace PDFDownloader
         }
 
         private bool isDownloading = false;
+        private CancellationTokenSource? cancellationTokenSource;
 
         private void btnBrowseExcel_Click(object sender, EventArgs e)
         {
@@ -70,12 +71,16 @@ namespace PDFDownloader
                 return;
 
             isDownloading = true;
-            
+            cancellationTokenSource = new CancellationTokenSource();
+
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
             btnStart.Enabled = false;
             btnBrowseExcel.Enabled = false;
             btnBrowseFolder.Enabled = false;
             chkForceDownload.Enabled = false;
             chkSkipExisting.Enabled = false;
+            btnCancel.Enabled = true;
 
             try
             {
@@ -146,6 +151,7 @@ namespace PDFDownloader
 
                 foreach (var row in excelLines.Take(maxDownloads))
                 {
+                    cancellationTokenSource.Token.ThrowIfCancellationRequested();
                     if (!int.TryParse(row.Id, out int numericId) || numericId <= 0)
                     {
                         var failedIdResult = new DownloadResult
@@ -176,7 +182,7 @@ namespace PDFDownloader
                         continue;
                     }
 
-                        if (duplicateIds.Contains(numericId))
+                    if (duplicateIds.Contains(numericId))
                     {
                         DownloadResult duplicateIdFailure = new DownloadResult
                         {
@@ -205,8 +211,10 @@ namespace PDFDownloader
                     DownloadResult result = await downloadService.TryDownloadItemAsync(
                         row,
                         txtOutputFolder.Text,
-                        SkipExisting
+                        SkipExisting,
+                        cancellationToken
                     );
+
                     if (result.Status == "Downloadet")
                     {
                         succeeded++;
@@ -232,13 +240,23 @@ namespace PDFDownloader
                         result.Message
                     );
 
-                progressDownloads.Value++;
-                lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
+                    progressDownloads.Value++;
+                    lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
 
                 }
 
                 reportService.GenerateReport(results, txtOutputFolder.Text);
 
+            }
+
+            catch (OperationCanceledException)
+            {
+                MessageBox.Show(
+                    "Download blev afbrudt.",
+                    "Afbrudt",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                    );
             }
 
             finally
@@ -249,7 +267,13 @@ namespace PDFDownloader
                 btnBrowseFolder.Enabled = true;
                 chkForceDownload.Enabled = true;
                 chkSkipExisting.Enabled = true;
+                btnCancel.Enabled = false;
             }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            cancellationTokenSource?.Cancel();
         }
     }
 }

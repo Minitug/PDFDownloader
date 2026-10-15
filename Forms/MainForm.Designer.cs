@@ -241,12 +241,14 @@
             // 
             // btnCancel
             // 
+            btnCancel.Enabled = false;
             btnCancel.Location = new Point(1356, 18);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(84, 39);
             btnCancel.TabIndex = 9;
             btnCancel.Text = "Stop";
             btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnStart
             // 
