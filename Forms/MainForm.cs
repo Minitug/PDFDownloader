@@ -65,6 +65,40 @@ namespace PDFDownloader
 
         private async void btnStart_Click(object sender, EventArgs e)
         {
+            if (!File.Exists(txtExcelPath.Text) ||
+                !string.Equals(Path.GetExtension(txtExcelPath.Text), ".xlsx",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show(
+                    "Excel-filen findes ikke, eller filtypen er ikke .xlsx.",
+                    "Ugyldig Excel-fil",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                return;
+
+            }
+
+            if (!Directory.Exists(txtOutputFolder.Text))
+            {
+                DialogResult answer = MessageBox.Show(
+                    "Outputmappen findes ikke. Vil du oprette den?",
+                    "Manglende outputmappe",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (answer == DialogResult.Yes)
+                {
+                    Directory.CreateDirectory(txtOutputFolder.Text);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
             var downloadService = new DownloadService();
             var excelService = new ExcelService();
             var excelLines = excelService.ReadExcel(txtExcelPath.Text);
