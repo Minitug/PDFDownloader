@@ -35,6 +35,7 @@
             Source = new DataGridViewTextBoxColumn();
             Message = new DataGridViewTextBoxColumn();
             pnlProgress = new Panel();
+            lblDownloadedMax = new Label();
             lblFailedDownloads = new Label();
             lblFailedFiles = new Label();
             lblSkippedDownloads = new Label();
@@ -92,27 +93,34 @@
             // 
             // ID
             // 
+            ID.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             ID.HeaderText = "ID";
             ID.MinimumWidth = 8;
             ID.Name = "ID";
             ID.ReadOnly = true;
+            ID.Width = 43;
             // 
             // Status
             // 
+            Status.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             Status.HeaderText = "Status";
             Status.MinimumWidth = 8;
             Status.Name = "Status";
             Status.ReadOnly = true;
+            Status.Width = 64;
             // 
             // Source
             // 
+            Source.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             Source.HeaderText = "Kilde_URL";
             Source.MinimumWidth = 8;
             Source.Name = "Source";
             Source.ReadOnly = true;
+            Source.Width = 84;
             // 
             // Message
             // 
+            Message.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Message.HeaderText = "Besked";
             Message.MinimumWidth = 8;
             Message.Name = "Message";
@@ -120,6 +128,7 @@
             // 
             // pnlProgress
             // 
+            pnlProgress.Controls.Add(lblDownloadedMax);
             pnlProgress.Controls.Add(lblFailedDownloads);
             pnlProgress.Controls.Add(lblFailedFiles);
             pnlProgress.Controls.Add(lblSkippedDownloads);
@@ -133,6 +142,16 @@
             pnlProgress.Name = "pnlProgress";
             pnlProgress.Size = new Size(1440, 150);
             pnlProgress.TabIndex = 2;
+            // 
+            // lblDownloadedMax
+            // 
+            lblDownloadedMax.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblDownloadedMax.AutoSize = true;
+            lblDownloadedMax.Location = new Point(1395, 17);
+            lblDownloadedMax.Name = "lblDownloadedMax";
+            lblDownloadedMax.Size = new Size(30, 15);
+            lblDownloadedMax.TabIndex = 8;
+            lblDownloadedMax.Text = "0 / 0";
             // 
             // lblFailedDownloads
             // 
@@ -195,6 +214,7 @@
             // lblProgress
             // 
             lblProgress.AutoSize = true;
+            lblProgress.BackColor = Color.Transparent;
             lblProgress.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblProgress.Location = new Point(18, 17);
             lblProgress.Name = "lblProgress";
@@ -221,12 +241,14 @@
             // 
             // btnCancel
             // 
+            btnCancel.Enabled = false;
             btnCancel.Location = new Point(1356, 18);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(84, 39);
             btnCancel.TabIndex = 9;
             btnCancel.Text = "Stop";
             btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnStart
             // 
@@ -424,6 +446,7 @@
         private DataGridView dgvResults;
         private TableLayoutPanel tlpMain;
         private Label lblDebug;
+        private Label lblDownloadedMax;
         private DataGridViewTextBoxColumn ID;
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn Source;
