@@ -7,11 +7,12 @@ namespace PDFDownloader.Services
     {
         internal void GenerateReport(
             List<DownloadResult> results,
-            string outputFolder
-        )
+            string outputFolder,
+            bool wasCancelled)
         {
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            string reportPath = Path.Combine(outputFolder, $"PDF_Downloader_rapport_{timestamp}.xlsx");
+            string status = wasCancelled ? "afbrudt" : "fuldført";
+            string reportPath = Path.Combine(outputFolder, $"PDF_Downloader_rapport_{status}_{timestamp}.xlsx");
 
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("rapport");
