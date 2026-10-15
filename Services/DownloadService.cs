@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using PDFDownloader.Models;
+﻿using PDFDownloader.Models;
 
 namespace PDFDownloader.Services
 {
