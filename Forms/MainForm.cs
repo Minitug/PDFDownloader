@@ -68,6 +68,8 @@ namespace PDFDownloader
         {
             if (isDownloading)
                 return;
+
+            isDownloading = true;
             
             btnStart.Enabled = false;
             btnBrowseExcel.Enabled = false;
@@ -125,12 +127,13 @@ namespace PDFDownloader
                 int failed = 0;
                 bool SkipExisting = chkSkipExisting.Checked;
 
-                progressDownloads.Maximum = maxDownloads;
+                progressDownloads.Maximum = Math.Min(maxDownloads, excelLines.Count);
                 progressDownloads.Value = 0;
                 lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
 
                 var duplicateIds = excelLines
-                    .GroupBy(item => item.Id)
+                    .Where(item => int.TryParse(item.Id, out int id) && id > 0)
+                    .GroupBy(item => int.Parse(item.Id))
                     .Where(group => group.Count() > 1)
                     .Select(group => group.Key)
                     .ToHashSet();
@@ -147,11 +150,13 @@ namespace PDFDownloader
                     {
                         var failedIdResult = new DownloadResult
                         {
-                            Id = (maxDownloads + 9999).ToString(),
+                            Id = row.Id,
                             Status = "Fejlet",
                             Url = "",
                             Message = $"BR-nummeret '{row.Id}' skal være et positivt heltal"
                         };
+
+                        row.Id = numericId.ToString();
 
                         results.Add(failedIdResult);
 
@@ -171,7 +176,7 @@ namespace PDFDownloader
                         continue;
                     }
 
-                        if (duplicateIds.Contains(row.Id))
+                        if (duplicateIds.Contains(numericId))
                     {
                         DownloadResult duplicateIdFailure = new DownloadResult
                         {
