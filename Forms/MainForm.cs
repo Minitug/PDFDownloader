@@ -13,6 +13,8 @@ namespace PDFDownloader
             txtOutputFolder.Text = Properties.Settings.Default.LastOutputFolder;
         }
 
+        private bool isDownloading = false;
+
         private void btnBrowseExcel_Click(object sender, EventArgs e)
         {
             using OpenFileDialog dialog = new()
@@ -62,7 +64,14 @@ namespace PDFDownloader
 
         private async void btnStart_Click(object sender, EventArgs e)
         {
+            if (isDownloading)
+                return;
+            
             btnStart.Enabled = false;
+            btnBrowseExcel.Enabled = false;
+            btnBrowseFolder.Enabled = false;
+            chkForceDownload.Enabled = false;
+            chkSkipExisting.Enabled = false;
 
             try
             {
@@ -189,7 +198,12 @@ namespace PDFDownloader
 
             finally
             {
+                isDownloading = false;
                 btnStart.Enabled = true;
+                btnBrowseExcel.Enabled = true;
+                btnBrowseFolder.Enabled = true;
+                chkForceDownload.Enabled = true;
+                chkSkipExisting.Enabled = true;
             }
         }
     }
