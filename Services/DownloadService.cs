@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using PDFDownloader.Models;
+﻿using PDFDownloader.Models;
 
 namespace PDFDownloader.Services
 {
@@ -25,7 +21,7 @@ namespace PDFDownloader.Services
             await source.CopyToAsync(destination);
         }
 
-        internal async Task<DownloadResult> TryDownloadItemAsync(DownloadItem item, string txtOutputFolderText)
+        internal async Task<DownloadResult> TryDownloadItemAsync(DownloadItem item, string txtOutputFolderText, bool skipExisting)
         {
             
             string[] urls = { item.Url, item.AltUrl };
@@ -33,6 +29,22 @@ namespace PDFDownloader.Services
             string finalpath = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf");
             string message = "Ingen gyldig PDF fundet";
             var pdfValidator = new PdfValidator();
+            bool isPdf;
+
+
+            if (skipExisting && File.Exists(finalpath))
+            {
+                if (pdfValidator.IsPdf(finalpath))
+                {
+                    return new DownloadResult
+                    {
+                        Id = item.Id,
+                        Status = "Sprunget over",
+                        Url = "",
+                        Message = "Der er allerede en fil med dette BR-Nummer"
+                    };
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(item.Url) &&
                 string.IsNullOrWhiteSpace(item.AltUrl))
@@ -54,7 +66,7 @@ namespace PDFDownloader.Services
                 {
                     await DownloadPdfAsync(requestUrl, path);
 
-                    bool isPdf = pdfValidator.IsPdf(path);
+                    isPdf = pdfValidator.IsPdf(path);
 
                     if (isPdf)
                     {

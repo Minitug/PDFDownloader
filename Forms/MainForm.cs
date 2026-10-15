@@ -1,8 +1,5 @@
 using PDFDownloader.Models;
 using PDFDownloader.Services;
-using System.Net.Http;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Policy;
 
 namespace PDFDownloader
 {
@@ -15,6 +12,8 @@ namespace PDFDownloader
             txtExcelPath.Text = Properties.Settings.Default.LastExcelPath;
             txtOutputFolder.Text = Properties.Settings.Default.LastOutputFolder;
         }
+
+        private bool isDownloading = false;
 
         private void btnBrowseExcel_Click(object sender, EventArgs e)
         {
@@ -65,41 +64,146 @@ namespace PDFDownloader
 
         private async void btnStart_Click(object sender, EventArgs e)
         {
-            var downloadService = new DownloadService();
-            var excelService = new ExcelService();
-            //var ExcelLines = new List<DownloadItem>();
-            var excelLines = excelService.ReadExcel(txtExcelPath.Text);
-            dgvResults.Rows.Clear();
-            int maxDownloads = 10;
-            //int i = 1;
-            int succeeded = 0;
-            int skipped = 0; 
-            int failed = 0;
+            if (isDownloading)
+                return;
+            
+            btnStart.Enabled = false;
+            btnBrowseExcel.Enabled = false;
+            btnBrowseFolder.Enabled = false;
+            chkForceDownload.Enabled = false;
+            chkSkipExisting.Enabled = false;
 
-            foreach (var row in excelLines.Take(maxDownloads))
+            try
             {
-                DownloadResult result = await downloadService.TryDownloadItemAsync(
-                    row,
-                    txtOutputFolder.Text
-                );
-                if (result.Status == "Downloadet")
+
+                if (!File.Exists(txtExcelPath.Text) ||
+                    !string.Equals(Path.GetExtension(txtExcelPath.Text), ".xlsx",
+                    StringComparison.OrdinalIgnoreCase))
                 {
-                    succeeded++;
-                    lblDownloadedFiles.Text = succeeded.ToString();
-                }
-                else
-                {
-                    skipped++;
-                    lblFailedFiles.Text = skipped.ToString();
+                    MessageBox.Show(
+                        "Excel-filen findes ikke, eller filtypen er ikke .xlsx.",
+                        "Ugyldig Excel-fil",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    btnStart.Enabled = true;
+                    return;
+
                 }
 
-                dgvResults.Rows.Add(
-                    result.Id,
-                    result.Status,
-                    result.Url,
-                    result.Message
-                );
+                if (!Directory.Exists(txtOutputFolder.Text))
+                {
+                    DialogResult answer = MessageBox.Show(
+                        "Outputmappen findes ikke. Vil du oprette den?",
+                        "Manglende outputmappe",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question
+                    );
 
+                    if (answer == DialogResult.Yes)
+                    {
+                        Directory.CreateDirectory(txtOutputFolder.Text);
+                    }
+                    else
+                    {
+                        btnStart.Enabled = true;
+                        return;
+                    }
+                }
+
+                var downloadService = new DownloadService();
+                var excelService = new ExcelService();
+                var reportService = new ReportService();
+                var excelLines = excelService.ReadExcel(txtExcelPath.Text);
+                dgvResults.Rows.Clear();
+                int maxDownloads = 10;
+                int succeeded = 0;
+                int skipped = 0;
+                int failed = 0;
+                bool SkipExisting = chkSkipExisting.Checked;
+
+                var duplicateIds = excelLines
+                    .GroupBy(item => item.Id)
+                    .Where(group => group.Count() > 1)
+                    .Select(group => group.Key)
+                    .ToHashSet();
+
+                List<DownloadResult> results = new();
+
+                lblDownloadedFiles.Text = succeeded.ToString();
+                lblSkippedFiles.Text = skipped.ToString();
+                lblFailedFiles.Text = failed.ToString();
+
+                foreach (var row in excelLines.Take(maxDownloads))
+                {
+                    if (duplicateIds.Contains(row.Id))
+                    {
+                        DownloadResult duplicateIdFailure = new DownloadResult
+                        {
+                            Id = row.Id,
+                            Status = "Fejlet",
+                            Url = "",
+                            Message = "Dubleret BR-nummer i Excelfilen"
+                        };
+
+                        results.Add(duplicateIdFailure);
+
+                        dgvResults.Rows.Add(
+                            duplicateIdFailure.Id,
+                            duplicateIdFailure.Status,
+                            duplicateIdFailure.Url,
+                            duplicateIdFailure.Message);
+
+                        failed++;
+                        lblFailedFiles.Text = failed.ToString();
+
+                        continue;
+                    }
+
+                    DownloadResult result = await downloadService.TryDownloadItemAsync(
+                        row,
+                        txtOutputFolder.Text,
+                        SkipExisting
+                    );
+                    if (result.Status == "Downloadet")
+                    {
+                        succeeded++;
+                        lblDownloadedFiles.Text = succeeded.ToString();
+                    }
+                    else if (result.Status == "Sprunget over")
+                    {
+                        skipped++;
+                        lblSkippedFiles.Text = skipped.ToString();
+                    }
+                    else
+                    {
+                        failed++;
+                        lblFailedFiles.Text = failed.ToString();
+                    }
+
+                    results.Add(result);
+
+                    dgvResults.Rows.Add(
+                        result.Id,
+                        result.Status,
+                        result.Url,
+                        result.Message
+                    );
+                }
+
+                reportService.GenerateReport(results, txtOutputFolder.Text);
+
+            }
+
+            finally
+            {
+                isDownloading = false;
+                btnStart.Enabled = true;
+                btnBrowseExcel.Enabled = true;
+                btnBrowseFolder.Enabled = true;
+                chkForceDownload.Enabled = true;
+                chkSkipExisting.Enabled = true;
             }
         }
     }
