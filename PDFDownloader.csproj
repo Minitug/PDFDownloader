@@ -27,4 +27,8 @@
     </None>
   </ItemGroup>
 
+	<ItemGroup>
+		<Compile Remove="PDFDownloader.Tests\**\*.cs" />
+	</ItemGroup>
+
 </Project>
