@@ -45,12 +45,6 @@ namespace PDFDownloader.Services
             var pdfValidator = new PdfValidator();
             bool isPdf;
 
-
-            if (item.Id == "22")
-            {
-                var bwadr = "";
-            }
-
             if (skipExisting && File.Exists(finalpath))
             {
                 if (pdfValidator.IsPdf(finalpath))
