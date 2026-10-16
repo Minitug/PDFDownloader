@@ -111,7 +111,7 @@
             // 
             // Source
             // 
-            Source.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Source.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             Source.HeaderText = "Kilde_URL";
             Source.MinimumWidth = 8;
             Source.Name = "Source";
@@ -147,11 +147,12 @@
             // 
             lblDownloadedMax.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblDownloadedMax.AutoSize = true;
-            lblDownloadedMax.Location = new Point(1395, 17);
+            lblDownloadedMax.Location = new Point(1391, 17);
             lblDownloadedMax.Name = "lblDownloadedMax";
             lblDownloadedMax.Size = new Size(30, 15);
             lblDownloadedMax.TabIndex = 8;
             lblDownloadedMax.Text = "0 / 0";
+            lblDownloadedMax.TextAlign = ContentAlignment.TopRight;
             // 
             // lblFailedDownloads
             // 
@@ -401,10 +402,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1448, 635);
+            ClientSize = new Size(1452, 635);
             Controls.Add(tlpMain);
             MaximumSize = new Size(1468, 1193);
-            MinimumSize = new Size(1347, 634);
+            MinimumSize = new Size(1468, 634);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "PDF Downloader";

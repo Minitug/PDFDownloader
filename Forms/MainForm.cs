@@ -76,6 +76,7 @@ namespace PDFDownloader
             CancellationToken cancellationToken = cancellationTokenSource.Token;
             var reportService = new ReportService();
             List<DownloadResult> results = new();
+            List<Task<DownloadResult>> downloadTasks = new();
             bool wasCancelled = false;
 
             btnStart.Enabled = false;
@@ -128,15 +129,38 @@ namespace PDFDownloader
                     var excelService = new ExcelService();
                     var excelLines = excelService.ReadExcel(txtExcelPath.Text);
                     dgvResults.Rows.Clear();
-                    int maxDownloads = 20;
+                    //int maxDownloads = 50;
                     int succeeded = 0;
                     int skipped = 0;
                     int failed = 0;
+                    int maxSimultaneousDownloads = 5;
                     bool SkipExisting = chkSkipExisting.Checked;
 
-                    progressDownloads.Maximum = Math.Min(maxDownloads, excelLines.Count);
+                    progressDownloads.Maximum = /*Math.Min(maxDownloads, */excelLines.Count/*)*/;
                     progressDownloads.Value = 0;
                     lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
+
+                    using var semaphore = new SemaphoreSlim(maxSimultaneousDownloads);
+
+                    async Task<DownloadResult> DownloadWithLimitAsync(DownloadItem row)
+                    {
+                        await semaphore.WaitAsync(cancellationToken);
+
+                        try
+                        {
+
+                            return await downloadService.TryDownloadItemAsync(
+                                row,
+                                txtOutputFolder.Text,
+                                SkipExisting,
+                                cancellationToken
+                            );
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    }
 
                     var duplicateIds = excelLines
                         .Where(item => int.TryParse(item.Id, out int id) && id > 0)
@@ -145,12 +169,13 @@ namespace PDFDownloader
                         .Select(group => group.Key)
                         .ToHashSet();
 
-
                     lblDownloadedFiles.Text = succeeded.ToString();
                     lblSkippedFiles.Text = skipped.ToString();
                     lblFailedFiles.Text = failed.ToString();
 
-                    foreach (var row in excelLines.Take(maxDownloads))
+                    //downloadTasks = new();
+
+                    foreach (var row in excelLines/*.Take(maxDownloads)*/)
                     {
                         cancellationTokenSource.Token.ThrowIfCancellationRequested();
                         if (!int.TryParse(row.Id, out int numericId) || numericId <= 0)
@@ -210,49 +235,68 @@ namespace PDFDownloader
                             continue;
                         }
 
-                        DownloadResult result = await downloadService.TryDownloadItemAsync(
-                            row,
-                            txtOutputFolder.Text,
-                            SkipExisting,
-                            cancellationToken
-                        );
-
-                        if (result.Status == "Downloadet")
-                        {
-                            succeeded++;
-                            lblDownloadedFiles.Text = succeeded.ToString();
-                        }
-                        else if (result.Status == "Sprunget over")
-                        {
-                            skipped++;
-                            lblSkippedFiles.Text = skipped.ToString();
-                        }
-                        else
-                        {
-                            failed++;
-                            lblFailedFiles.Text = failed.ToString();
-                        }
-
-                        results.Add(result);
-
-                        dgvResults.Rows.Add(
-                            int.Parse(result.Id),
-                            result.Status,
-                            result.Url,
-                            result.Message
-                        );
-
-                        progressDownloads.Value++;
-                        lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
+                        //DownloadResult result = await DownloadWithLimitAsync(row);
+                        downloadTasks.Add(DownloadWithLimitAsync(row));
 
                     }
 
 
+                    while (downloadTasks.Count > 0)
+                    {
+                        Task<DownloadResult> completedTask = await Task.WhenAny(downloadTasks);
+                        downloadTasks.Remove(completedTask);
+
+                        try
+                        {
+                            DownloadResult result = await completedTask;
+
+                            if (result.Status == "Downloadet")
+                            {
+                                succeeded++;
+                                lblDownloadedFiles.Text = succeeded.ToString();
+                            }
+                            else if (result.Status == "Sprunget over")
+                            {
+                                skipped++;
+                                lblSkippedFiles.Text = skipped.ToString();
+                            }
+                            else
+                            {
+                                failed++;
+                                lblFailedFiles.Text = failed.ToString();
+                            }
+
+                            results.Add(result);
+
+                            dgvResults.Rows.Add(
+                                int.Parse(result.Id),
+                                result.Status,
+                                result.Url,
+                                result.Message
+                            );
+
+                            progressDownloads.Value++;
+                            lblDownloadedMax.Text = $"{progressDownloads.Value.ToString()} / {progressDownloads.Maximum.ToString()}";
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            wasCancelled = true;
+                        }
+                    }
                 }
 
                 catch (OperationCanceledException)
                 {
                     wasCancelled = true;
+
+                    try
+                    {
+                        await Task.WhenAll(downloadTasks);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Expected when the remaining downloads are cancelled.
+                    }
 
                     MessageBox.Show(
                         "Download blev afbrudt.",
@@ -287,5 +331,6 @@ namespace PDFDownloader
         {
             cancellationTokenSource?.Cancel();
         }
+        
     }
 }
