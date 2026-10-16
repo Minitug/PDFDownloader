@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="PDFDownloader.csproj" />
+  <Project Path="PDFDownloader.Tests/PDFDownloader.Tests.csproj" Id="437c6ae1-2fed-446f-814b-8cac200ee013" />
 </Solution>
