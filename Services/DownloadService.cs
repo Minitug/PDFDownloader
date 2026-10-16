@@ -1,11 +1,15 @@
 ﻿using PDFDownloader.Models;
+using System.Diagnostics;
 
 namespace PDFDownloader.Services
 {
     internal class DownloadService
     {
 
-        private readonly HttpClient http = new();
+        private readonly HttpClient http = new()
+        {
+            //Timeout = TimeSpan.FromMinutes(4)
+        };
 
         internal async Task DownloadPdfAsync(
             string requestUrl, 
@@ -13,6 +17,7 @@ namespace PDFDownloader.Services
             CancellationToken cancellationToken
         )
         {
+            //http.Timeout = TimeSpan.FromMinutes(4);
 
             using var response = await http.GetAsync(requestUrl, cancellationToken);
 
@@ -40,6 +45,11 @@ namespace PDFDownloader.Services
             var pdfValidator = new PdfValidator();
             bool isPdf;
 
+
+            if (item.Id == "22")
+            {
+                var bwadr = "";
+            }
 
             if (skipExisting && File.Exists(finalpath))
             {
@@ -99,6 +109,10 @@ namespace PDFDownloader.Services
                     }
 
                     
+                }
+                catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+                {
+                    message = "HTTP-anmodningen fik timeout.";
                 }
                 catch (OperationCanceledException)
                 {
