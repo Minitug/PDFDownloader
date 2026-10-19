@@ -6,10 +6,15 @@ namespace PDFDownloader.Services
     internal class DownloadService
     {
 
-        private readonly HttpClient http = new()
+        private readonly HttpClient http = new();
+
+        public DownloadService(HttpClient? httpClient = null)
         {
-            //Timeout = TimeSpan.FromMinutes(4)
-        };
+            http = httpClient ?? new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(4)
+            };
+        }
 
         internal async Task DownloadPdfAsync(
             string requestUrl, 
