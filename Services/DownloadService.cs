@@ -42,6 +42,7 @@ namespace PDFDownloader.Services
             string path = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf.tmp");
             string finalpath = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf");
             string message = "Ingen gyldig PDF fundet";
+            List<string> errors = new();
             var pdfValidator = new PdfValidator();
             bool isPdf;
 
@@ -121,13 +122,16 @@ namespace PDFDownloader.Services
                 {
                     File.Delete(path);
                 }
+
+                string urlType = requestUrl == item.Url ? "Primær" : "Alternativ";
+                errors.Add($"{urlType}: {message}");
             }
             return new DownloadResult
             {
                 Id = item.Id,
                 Status = "Fejlet",
                 Url = "",
-                Message = message
+                Message = string.Join(" | ", errors)
             };
         }
     }
