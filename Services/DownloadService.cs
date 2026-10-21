@@ -6,10 +6,15 @@ namespace PDFDownloader.Services
     internal class DownloadService
     {
 
-        private readonly HttpClient http = new()
+        private readonly HttpClient http = new();
+
+        public DownloadService(HttpClient? httpClient = null)
         {
-            //Timeout = TimeSpan.FromMinutes(4)
-        };
+            http = httpClient ?? new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(4)
+            };
+        }
 
         internal async Task DownloadPdfAsync(
             string requestUrl, 
@@ -42,6 +47,7 @@ namespace PDFDownloader.Services
             string path = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf.tmp");
             string finalpath = Path.Combine(txtOutputFolderText, $"{item.Id}.pdf");
             string message = "Ingen gyldig PDF fundet";
+            List<string> errors = new();
             var pdfValidator = new PdfValidator();
             bool isPdf;
 
@@ -121,13 +127,16 @@ namespace PDFDownloader.Services
                 {
                     File.Delete(path);
                 }
+
+                string urlType = requestUrl == item.Url ? "Primær" : "Alternativ";
+                errors.Add($"{urlType}: {message}");
             }
             return new DownloadResult
             {
                 Id = item.Id,
                 Status = "Fejlet",
                 Url = "",
-                Message = message
+                Message = string.Join(" | ", errors)
             };
         }
     }

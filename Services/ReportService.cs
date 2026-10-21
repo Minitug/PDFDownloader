@@ -26,7 +26,10 @@ namespace PDFDownloader.Services
 
             rowNumber++;
 
-            foreach (var row in results){
+            var sortedResults = results
+                .OrderBy(result => int.TryParse(result.Id, out int id) ? id : int.MaxValue);
+
+            foreach (var row in sortedResults){
                 worksheet.Cell(rowNumber, 1).Value = row.Id;
                 worksheet.Cell(rowNumber, 2).Value = row.Status;
                 worksheet.Cell(rowNumber, 3).Value = row.Url;

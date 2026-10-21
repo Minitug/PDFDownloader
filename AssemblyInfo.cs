@@ -4,7 +4,7 @@
 
 namespace PDFDownloader
 {
-    internal class AssembyInfo
+    internal class AssemblyInfo
     {
     }
 }
