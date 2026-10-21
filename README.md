@@ -200,7 +200,7 @@ PDF validation checks the file signature but does not perform a complete structu
 
 ## Project Background
 
-This application was created as a school project to gain practical experience with:
+This application was created as a course project to gain practical experience with:
 
 - Object-oriented programming and separation of responsibilities.
 - Asynchronous and parallel programming.
